@@ -1,24 +1,30 @@
 {
-  "homepage": "http://exarp1.github.io/react-hooks-demo",
-  "name": "02-Basic-React-Hooks-useState-useRef-useEffect",
+  "name": "React-App-Learning-React-Hooks",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "next",
     "build": "next build",
     "start": "next start"
   },
   "keywords": [],
-  "author": "",
+  "author": "Peter Kellner",
   "license": "ISC",
   "dependencies": {
-    "next": "^9.2.1",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0"
+    "@zeit/next-css": "^1.0.1",
+    "bootstrap": "^4.3.1",
+    "next": "^8.0.3",
+    "react": "^16.8.3",
+    "react-dom": "^16.8.3",
+    "react-toastify": "^4.5.2"
   },
   "devDependencies": {
-    "gh-pages": "^2.2.0"
+    "eslint": "^5.16.0",
+    "eslint-plugin-react": "^7.12.4",
+    "eslint-plugin-react-hooks": "^1.5.0",
+    "prettier": "1.16.4",
+    "react-hooks": "^1.0.1",
+    "react-performance": "0.0.5"
   }
 }
