@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useRef } from "react";
 
 const ImageToggleOnMouseOver = ({ primaryImg, secondaryImg }) => {
-  console.error(`Primary Image:
-    ${primaryImg}`);
+  const imageRef = useRef(null);
 
-  return <img src={primaryImg} alt={""} />;
+  return (
+    <img
+      src={primaryImg}
+      alt={""}
+      ref={imageRef}
+      onMouseOver={() => {}}
+      onMouseOut={() => {}}
+    />
+  );
 };
 
 export default ImageToggleOnMouseOver;
