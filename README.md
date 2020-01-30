@@ -6,4 +6,12 @@ react-hooks
 
 ## To run:
 
-npm install & npm run dev
+npm install & node server.js
+
+## To login:
+
+### username: asdf@asdf.com
+
+### password: asdf@asdf.com
+
+(any email can be used in place of asdf@asdf.com as long as you use that same email as the password too)

@@ -4,10 +4,10 @@
       "id": 1530,
       "firstName": "Tammy",
       "lastName": "Baker",
+      "favorite": false,
+      "bio": "Tammy has held a number of executive and management roles over the past 15 years, including VP engineering Roles at Molekule Inc., Cantaloupe Systems, E-Color, and Untangle Inc.",
       "sat": false,
-      "sun": true,
-      "favorite": true,
-      "bio": "Tammy has held a number of executive and management roles over the past 15 years, including VP engineering Roles at Molekule Inc., Cantaloupe Systems, E-Color, and Untangle Inc."
+      "sun": true
     },
     {
       "id": 5996,

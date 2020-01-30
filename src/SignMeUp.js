@@ -40,6 +40,16 @@ const SignMeUp = ({ signupCallback }) => {
   const buttonText = sendProcessing ? 'processing...' : 'Get Updates'
 
   //console.log("src/SignMeUp called");
+  if (context.loggedInUserEmail) {
+    return (
+      <div className="container">
+        <div className="content">
+          <span>Logged in User Email: {context.loggedInUserEmail}</span>&nbsp;&nbsp;
+          <a href="/logout">Logout</a>
+        </div>
+      </div>
+    )
+  }
 
   return (
     context.showSignMeUp && (
@@ -63,6 +73,7 @@ const SignMeUp = ({ signupCallback }) => {
             <button disabled={!emailValid || sendProcessing} className="btn" onClick={sendEmailToBackend} type="submit">
               {buttonText}
             </button>
+            &nbsp;&nbsp;<a href="/login">Login</a>
           </div>
         </div>
       </div>
