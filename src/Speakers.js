@@ -4,38 +4,46 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import '../static/site.css'
 import { Header } from '../src/Header'
 import { Menu } from '../src/Menu'
-import SpeakerData from './SpeakerData'
+// import SpeakerData from './SpeakerData'
 import SpeakerDetail from './SpeakerDetail'
 import { ConfigContext } from './App'
 import speakersReducer from './speakersReducer'
+import useAxiosFetch from './useAxiosFetch'
+import axios from 'axios'
 
 const Speakers = ({}) => {
   const [speakingSaturday, setSpeakingSaturday] = useState(true)
   const [speakingSunday, setSpeakingSunday] = useState(true)
   const [speakerList, dispatch] = useReducer(speakersReducer, [])
-  const [isLoading, setIsLoading] = useState(true)
+  // const [isLoading, setIsLoading] = useState(true)
   const context = useContext(ConfigContext)
 
-  useEffect(() => {
-    setIsLoading(true)
-    new Promise(function(resolve) {
-      setTimeout(function() {
-        resolve()
-      }, 1000)
-    }).then(() => {
-      setIsLoading(false)
-      const speakerListServerFilter = SpeakerData.filter(({ sat, sun }) => {
-        return (speakingSaturday && sat) || (speakingSunday && sun)
-      })
-      dispatch({
-        type: 'setSpeakerList',
-        data: speakerListServerFilter,
-      })
-    })
-    return () => {
-      console.log('cleanup')
-    }
-  }, []) // [speakingSunday, speakingSaturday]);
+  const { data, isLoading, hasErrored, errorMessage, updateDataRecord } = useAxiosFetch(
+    'http://localhost:4000/speakers',
+    []
+  )
+
+  // useEffect(() => {
+  //   setIsLoading(true)
+
+  //   new Promise(function(resolve) {
+  //     setTimeout(function() {
+  //       resolve()
+  //     }, 1000)
+  //   }).then(() => {
+  //     setIsLoading(false)
+  //     const speakerListServerFilter = SpeakerData.filter(({ sat, sun }) => {
+  //       return (speakingSaturday && sat) || (speakingSunday && sun)
+  //     })
+  //     dispatch({
+  //       type: 'setSpeakerList',
+  //       data: speakerListServerFilter,
+  //     })
+  //   })
+  //   return () => {
+  //     console.log('cleanup')
+  //   }
+  // }, []) // [speakingSunday, speakingSaturday]);
 
   const handleChangeSaturday = () => {
     setSpeakingSaturday(!speakingSaturday)
@@ -43,7 +51,7 @@ const Speakers = ({}) => {
 
   const newSpeakerList = useMemo(
     () =>
-      speakerList
+      data
         .filter(({ sat, sun }) => (speakingSaturday && sat) || (speakingSunday && sun))
         .sort(function(a, b) {
           if (a.firstName < b.firstName) {
@@ -54,22 +62,17 @@ const Speakers = ({}) => {
           }
           return 0
         }),
-    [speakingSaturday, speakingSunday, speakerList]
+    [speakingSaturday, speakingSunday, data]
   )
 
-  const speakerListFiltered = isLoading ? [] : newSpeakerList
-
-  const handleChangeSunday = () => {
-    setSpeakingSunday(!speakingSunday)
-  }
-
-  const heartFavoriteHandler = useCallback((e, favoriteValue) => {
+  const heartFavoriteHandler = useCallback((e, speakerRec) => {
     e.preventDefault()
-    const sessionId = parseInt(e.target.attributes['data-sessionid'].value)
-    dispatch({
-      type: favoriteValue === true ? 'favorite' : 'unfavorite',
-      sessionId,
-    })
+    const toggledRec = { ...speakerRec, favorite: !speakerRec.favorite }
+    axios
+      .put(`http://localhost:4000/speakers/${speakerRec.id}`, toggledRec)
+      .then(response => updateDataRecord(toggledRec))
+      .catch(error => console.log(error))
+
     // setSpeakerList(
     //   speakerList.map(item => {
     //     if (item.id === sessionId) {
@@ -81,6 +84,16 @@ const Speakers = ({}) => {
     // )
     //console.log("changing session favorte to " + favoriteValue);
   }, [])
+
+  const speakerListFiltered = isLoading ? [] : newSpeakerList
+
+  if (hasErrored) {
+    return <div>{errorMessage}&nbsp;'Make sure you have launched "npm run json-server"'</div>
+  }
+
+  const handleChangeSunday = () => {
+    setSpeakingSunday(!speakingSunday)
+  }
 
   if (isLoading) return <div>Loading...</div>
 
@@ -119,7 +132,7 @@ const Speakers = ({}) => {
         </div>
         <div className="row">
           <div className="card-deck">
-            {speakerListFiltered.map(({ id, firstName, lastName, bio, favorite }) => {
+            {speakerListFiltered.map(({ id, firstName, lastName, sat, sun, bio, favorite }) => {
               return (
                 <SpeakerDetail
                   key={id}
@@ -129,6 +142,8 @@ const Speakers = ({}) => {
                   firstName={firstName}
                   lastName={lastName}
                   bio={bio}
+                  sat={sat}
+                  sun={sun}
                 />
               )
             })}
